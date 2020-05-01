@@ -1,0 +1,16 @@
+body {font-family: 微軟正黑體;}
+
+div.memberName {
+    text-align: center;
+    margin-top: 3px;
+}
+div.container {
+    margin-top: 20px;
+    border-bottom: gray solid 1px;
+}
+table.comment-table {
+    margin: 20px;
+}
+div.comments {
+    margin: 5px 0px;
+}

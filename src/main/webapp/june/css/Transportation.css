@@ -1,0 +1,13 @@
+body {
+    font-family: 微軟正黑體;
+}
+
+h1.title {
+    margin: 10px;
+    text-align: center;
+}
+
+div.card-header {
+    font-size: large;
+    font-weight: bolder;
+}
