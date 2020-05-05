@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="width=device-width, initial-scale=1.0"><!-- changed -->
-    <title>旅行 揪團 一起玩</title><!-- changed -->
+    <title>幹</title><!-- changed -->
 
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
