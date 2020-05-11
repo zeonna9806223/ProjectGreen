@@ -1,18 +1,26 @@
 package social.bean; 
 
-import java.io.Serializable; 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="RestaurantInfo")
 public class RestaurantTypeBean implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+	@Id @Column(name="RestaurantID")
+	private Integer restaurantId;
+	@Column(name="RestaurantType")
 	private String restaurantType;
 		
 	public RestaurantTypeBean() {
 	}
 	
-	public RestaurantTypeBean(String restaurantType) {
+	public RestaurantTypeBean(Integer restaurantID, String restaurantType) {
+		this.restaurantId = restaurantID;
 		this.restaurantType = restaurantType;
 	}
 
@@ -22,6 +30,14 @@ public class RestaurantTypeBean implements Serializable {
 	
 	public String getRestaurantType() {
 		return this.restaurantType;
+	}
+
+	public Integer getRestaurantId() {
+		return restaurantId;
+	}
+
+	public void setRestaurantId(Integer restaurantID) {
+		restaurantId = restaurantID;
 	}
 	
 }

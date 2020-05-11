@@ -4,10 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 import social.DAO.MatchDAO;
 import social.DAO.MatchDAOImpl;
+import social.DAO.RestaurantTypeDAOImpl;
 import social.bean.FriendInfoBean;
 import social.bean.MatchRequestBean;
 import social.bean.MatchesBean;
@@ -17,17 +21,32 @@ public class MatchImpl implements Match {
 
 	MatchDAO matchDAO;
 
-	public MatchImpl() {
-		matchDAO = new MatchDAOImpl();
+	private Session session;
+	private SessionFactory factory;
+	
+	public Session getSession() {
+		return session;
 	}
+
+//	public MatchImpl() {
+//		matchDAO = new MatchDAOImpl();
+//	}
+
+	public MatchImpl(Session session) {
+		matchDAO = new MatchDAOImpl(session);
+	}
+	
+//	public MatchImpl(SessionFactory factory) {
+//		matchDAO = new MatchDAOImpl(factory);
+//	}
 
 	@Override
 	public void insertMatchRequest(MatchRequestBean mrb) {
 		matchDAO.insertMatchRequest(mrb);
 	}
 
-	public List<MatchingBean> todayRequest() {
-		return matchDAO.todayRequest();
+	public List<MatchingBean> todayRequest(int time) {
+		return matchDAO.todayRequest(time);
 	};
 
 	public void insertMatchResult(List matchResult) {
@@ -133,6 +152,20 @@ public class MatchImpl implements Match {
 				}
 			}
 
+			//刪掉已經存在的好友配對
+			List<MatchesBean> already = matchDAO.showMatch(0);
+			System.out.println("e04"+already.size());
+			for (int iii = 0; iii < matchedALL.size(); iii++) {
+				for (MatchesBean mmm : already) {
+					if ((matchedALL.get(iii).get(0) == mmm.getMemberId1()
+							&& matchedALL.get(iii).get(1) == mmm.getMemberId2())
+							|| (matchedALL.get(iii).get(1) == mmm.getMemberId1()
+									&& matchedALL.get(iii).get(0) == mmm.getMemberId2())) {
+						matchedALL.remove(iii);
+						iii--;
+					}
+				}
+			}
 			List pair1 = new ArrayList();
 			while (matchedALL.size() != 0) {
 				Integer topScore = 0;
@@ -212,20 +245,21 @@ public class MatchImpl implements Match {
 		return age;
 	}
 
-	public void markMatch(Integer i) {
-		matchDAO.markMatch(i);
+	public void markMatch(Integer i, Integer ii) {
+		matchDAO.markMatch(i,ii);
 	}
 
-	public void markPairDate(Integer i) {
-		matchDAO.markPairDate(i);
+	public void markPairDate(Integer i, Integer ii) {
+		matchDAO.markPairDate(i,ii);
 	}
 
-	public List<MatchesBean> showMatch() {
-		return matchDAO.showMatch();
+	public List<MatchesBean> showMatch(Integer ii) {
+		return matchDAO.showMatch(ii);
 	}
 
-	public List<MatchesBean> showFriends() {
-		List<MatchesBean> mb = matchDAO.showMatch();
+	public List<MatchesBean> showFriends(Integer ii) {
+		List<MatchesBean> mb = matchDAO.showMatch(ii);
+		System.out.println("showFriends"+mb.size());
 		for (int i = 0; i < mb.size(); i++) {
 //			System.out.println(mb.get(i).getFriendDate());
 			if (mb.get(i).getDelete1() == 1 || mb.get(i).getFriendDate() == null) {
@@ -236,33 +270,20 @@ public class MatchImpl implements Match {
 		return mb;
 	}
 
-	public List<MatchesBean> showTodayMatch() {
-		List<MatchesBean> mb = matchDAO.showMatch();
+	public List<MatchesBean> showTodayMatch(Integer ii) {
+		List<MatchesBean> mb = matchDAO.showMatch(ii);
+		System.out.println("showtodaymatch "+mb.size());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for (int i = 0; i < mb.size(); i++) {
 			String matchday = sdf.format(mb.get(i).getPairDate());
-//			System.out.println(matchday);
+			System.out.println("A"+matchday);
 			String today = sdf.format(new Date());
-//			System.out.println(today);
+			System.out.println("B"+today);
 			if (!matchday.equals(today) || mb.get(i).getFriendDate() != null) {
+				if(mb.size() != 0) {
 				mb.remove(i);
 				i--;
-			}
-		}
-		return mb;
-	}
-
-	public List<MatchesBean> showFriend() {
-		List<MatchesBean> mb = matchDAO.showMatch();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		for (int i = 0; i < mb.size(); i++) {
-			String matchday = sdf.format(mb.get(i).getPairDate());
-//			System.out.println(matchday);
-			String today = sdf.format(new Date());
-//			System.out.println(today);
-			if (mb.get(i).getFriendDate() == null) {
-				mb.remove(i);
-				i--;
+				}
 			}
 		}
 		return mb;
@@ -272,7 +293,7 @@ public class MatchImpl implements Match {
 		return matchDAO.showFriendInfo(i);
 	}
 
-	public void deleteFriend(Integer i) {
-		matchDAO.deleteFriend(i);
+	public void deleteFriend(Integer i, Integer ii) {
+		matchDAO.deleteFriend(i,ii);
 	}
 }

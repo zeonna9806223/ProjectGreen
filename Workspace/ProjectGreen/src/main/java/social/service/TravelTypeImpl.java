@@ -2,20 +2,21 @@ package social.service;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import social.DAO.TravelTypeDAO;
 import social.DAO.TravelTypeDAOImpl;
-import social.bean.TravelTypeBean;
 
 public class TravelTypeImpl implements TravelType {
 	
-	TravelTypeDAO travelTypeDAO;
+	private TravelTypeDAO travelTypeDAO;
 
-	public TravelTypeImpl() {
-		travelTypeDAO = new TravelTypeDAOImpl();
+	public TravelTypeImpl(Session session) {
+		travelTypeDAO = new TravelTypeDAOImpl(session);
 	}
-
+	
 	@Override
-	public List<TravelTypeBean> queryTravelTypes() {
+	public List<String> queryTravelTypes() {
 		return travelTypeDAO.queryTravelTypes();
 	}
 	

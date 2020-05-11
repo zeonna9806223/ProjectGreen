@@ -6,7 +6,7 @@ public class FriendInfoBean {
 	private Integer memberId;
 	private String memberName;
 	private Integer gender;
-	private Date memberBithday;
+	private java.sql.Date memberBithday;
 	private String memberIntroduce;
 	private Integer profileHeight;
 	private Integer profileWeight;
@@ -15,7 +15,7 @@ public class FriendInfoBean {
 		super();
 	}
 
-	public FriendInfoBean(Integer memberId, String memberName, Integer gender, Date memberBithday,
+	public FriendInfoBean(Integer memberId, String memberName, Integer gender, java.sql.Date memberBithday,
 			String memberIntroduce, Integer profileHeight, Integer profileWeight) {
 		this.memberId = memberId;
 		this.memberName = memberName;
@@ -54,7 +54,7 @@ public class FriendInfoBean {
 		return memberBithday;
 	}
 
-	public void setMemberBithday(Date memberBithday) {
+	public void setMemberBithday(java.sql.Date memberBithday) {
 		this.memberBithday = memberBithday;
 	}
 

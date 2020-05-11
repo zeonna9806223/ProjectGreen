@@ -1,21 +1,20 @@
 package social.service;
 
 import java.util.List;
-
+import org.hibernate.Session;
 import social.DAO.RestaurantTypeDAO;
 import social.DAO.RestaurantTypeDAOImpl;
-import social.bean.RestaurantTypeBean;
 
 public class RestaurantTypeImpl implements RestaurantType {
 	
-	RestaurantTypeDAO restaurantTypeDAO;
-
-	public RestaurantTypeImpl() {
-		restaurantTypeDAO = new RestaurantTypeDAOImpl();
+	private RestaurantTypeDAO restaurantTypeDAO;
+	
+	public  RestaurantTypeImpl(Session session) {
+		restaurantTypeDAO = new RestaurantTypeDAOImpl(session);
 	}
-
+	
 	@Override
-	public List<RestaurantTypeBean> queryRestaurantTypes() {
+	public List<String> queryRestaurantTypes() {
 		return restaurantTypeDAO.queryRestaurantTypes();
 	}
 	

@@ -2,31 +2,79 @@ package social.bean;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name="Matches")
 public class MatchesBean {
-	private Integer PairId;
+	@Id @Column(name="PairId")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer pairId;
+	@Column(name="MemberId1")
 	private Integer memberId1;
+	@Column(name="MemberId2")
 	private Integer memberId2;
+	@Column(name="Friends1")
 	private Integer friends1;
+	@Column(name="Friends2")
 	private Integer friends2;
-	private Date pairDate;
-	private Date friendDate;
+	@Column(name="PairDate")	
+	private java.sql.Date pairDate;
+	@Column(name="FriendDate")	
+	private java.sql.Date friendDate;
+	@Column(name="Delete1")
 	private Integer delete1;
+	@Column(name="Delete2")
 	private Integer delete2;
+	@Transient
 	private Integer profileHeight;
+	@Transient
 	private Integer profileWeight;
+	@Transient
 	private String memberName;
+	@Transient
 	private Integer gender;
-	private Date memberBithday;
+	@Transient
+	private java.sql.Date memberBithday;
+	@Transient
 	private String memberIntroduce;
 	
 	public MatchesBean() {
-		super();
+		
+	}
+	
+	//insert配對用建構子
+	public MatchesBean(Integer memberId1, Integer memberId2, java.sql.Date pairDate, Integer delete1, Integer delete2) {
+		this.memberId1 = memberId1;
+		this.memberId2 = memberId2;
+		this.pairDate = pairDate;
+		this.delete1 = delete1;
+		this.delete2 = delete2;
 	}
 
 	public MatchesBean(Integer pairId, Integer memberId1, Integer memberId2, Integer friends1, Integer friends2,
-			Date pairDate, Date friendDate, Integer delete1, Integer delete2, Integer profileHeight,
-			Integer profileWeight, String memberName, Integer gender, Date memberBithday, String memberIntroduce) {
-		this.PairId = pairId;
+			java.sql.Date pairDate, java.sql.Date friendDate, Integer delete1, Integer delete2) {
+		this.pairId = pairId;
+		this.memberId1 = memberId1;
+		this.memberId2 = memberId2;
+		this.friends1 = friends1;
+		this.friends2 = friends2;
+		this.pairDate = pairDate;
+		this.friendDate = friendDate;
+		this.delete1 = delete1;
+		this.delete2 = delete2;
+	}
+
+	public MatchesBean(Integer pairId, Integer memberId1, Integer memberId2, Integer friends1, Integer friends2,
+			java.sql.Date pairDate, java.sql.Date friendDate, Integer delete1, Integer delete2, Integer profileHeight,
+			Integer profileWeight, String memberName, Integer gender, java.sql.Date memberBithday, String memberIntroduce) {
+		this.pairId = pairId;
 		this.memberId1 = memberId1;
 		this.memberId2 = memberId2;
 		this.friends1 = friends1;
@@ -44,11 +92,11 @@ public class MatchesBean {
 	}
 
 	public Integer getPairId() {
-		return PairId;
+		return pairId;
 	}
 
 	public void setPairId(Integer pairId) {
-		PairId = pairId;
+		this.pairId = pairId;
 	}
 
 	public Integer getMemberId1() {
@@ -87,7 +135,7 @@ public class MatchesBean {
 		return pairDate;
 	}
 
-	public void setPairDate(Date pairDate) {
+	public void setPairDate(java.sql.Date pairDate) {
 		this.pairDate = pairDate;
 	}
 
@@ -95,7 +143,7 @@ public class MatchesBean {
 		return friendDate;
 	}
 
-	public void setFriendDate(Date friendDate) {
+	public void setFriendDate(java.sql.Date friendDate) {
 		this.friendDate = friendDate;
 	}
 
@@ -151,7 +199,7 @@ public class MatchesBean {
 		return memberBithday;
 	}
 
-	public void setMemberBithday(Date memberBithday) {
+	public void setMemberBithday(java.sql.Date memberBithday) {
 		this.memberBithday = memberBithday;
 	}
 

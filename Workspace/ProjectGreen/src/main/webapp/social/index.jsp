@@ -1,17 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="width=device-width, initial-scale=1.0"><!-- changed -->
-    <title>旅行 揪團 一起玩(中壢按摩699)</title><!-- changed -->
+    <title>旅行 揪團 一起玩</title><!-- changed -->
 
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
+	<script src="//code.jquery.com/jquery-1.9.1.js"></script>
+ 	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+ 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/social/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/social/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/social/css/fontAwesome.css">
@@ -34,7 +38,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <button id="primary-nav-button" type="button">Menu</button>
-                        <a href="${pageContext.request.contextPath}/social/index.html">
+                        <a href="${pageContext.request.contextPath}/social/Index.html">
                             <div class="logo">
                                 <img src="${pageContext.request.contextPath}/social/img/logo.png" alt="Venue Logo">
                             </div>
@@ -67,7 +71,7 @@
 <!--                                 <li><a class="scrollTo" data-scrollTo="comment" href="#">留言及評論</a></li> -->
                                 <li>
                             		<c:if test="${empty LoginOK}">
-										<a href="<c:url value='login.jsp' />">
+										<a href="<c:url value='/member/login.jsp' />">
 				     						登入 
 										</a>
               						</c:if>
@@ -76,13 +80,13 @@
                             	<li>
                             		<!-- 註冊 -->
                             		<c:if test="${empty LoginOK}">
-			   							<a href="<c:url value='register/register.jsp' />"> 註冊 </a>
+			   							<a href="<c:url value='/member/register.jsp' />"> 註冊 </a>
 									</c:if> 
 									
 									<!-- 登入後 顯示基本資料 -->
 									<c:if test="${ ! empty LoginOK }">
 										<span id="account"></span>
-										<img style="padding-left:10px;" src='${pageContext.request.contextPath}/social/getImage?id=${LoginOK.memberId}&type=MEMBER' alt="" width="50px" height="50px" >
+										<img style="padding-left:10px;" src='${pageContext.request.contextPath}/social/getImage?id=${LoginOK.memberAccount}&type=MEMBER' alt="" width="50px" height="50px" >
 									</c:if> 
 									
             					</li>
@@ -91,10 +95,8 @@
             						<!-- 登入後  顯示登出 -->
             						
             						
-            						<c:if test="${ ! empty LoginOK }">
-									<a href="<c:url value='LogOut.jsp' />">
-  									登出 
-	        						</a>
+									<c:if test="${ ! empty LoginOK }">
+			  						<a href="<c:url value='/member/logout.jsp' />">登出 </a>
 									</c:if>
             						
             						
@@ -179,7 +181,7 @@
                 <div class="col-md-4 fixed" style="width:36%">
                     <div class="featured-item">
                         <div class="thumb">
-                            <img src="${pageContext.request.contextPath}/social/img/group2.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/social/img/group2.jpg" alt="" style="height:260px">
                             <div class="down-content">
                                 <h4>五彩繽紛的旅程，都有我的身影</h4>
                                 <span>會員專屬</span>
@@ -194,7 +196,7 @@
                 <div class="col-md-4 fixed " style="width:36%">
                     <div class="featured-item">
                         <div class="thumb">
-                            <img src="${pageContext.request.contextPath}/social/img/pair.jpg" alt="">
+                            <img src="${pageContext.request.contextPath}/social/img/pair.jpg" alt="" style="height:260px">
                             <div class="down-content">
                                 <h4>旅途身旁，一直未曾注意的夥伴</h4>
                                 <span>會員專屬</span>
@@ -613,9 +615,9 @@ $( document ).ready(function(){
 });
 
 // 點擊登出 刪除所有 cookie
-$("#logOut").click(function(){
+$("#logout").click(function(){
 	clearAllCookie()
-	console.log("asdasd")
+	console.log("logout")
 	alert("你已登出本系統，頁面將刷新")
 	window.location.reload()
 	console.log("...")

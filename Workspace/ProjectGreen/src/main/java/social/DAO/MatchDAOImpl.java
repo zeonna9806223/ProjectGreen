@@ -1,16 +1,16 @@
 package social.DAO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import social.bean.FriendInfoBean;
 import social.bean.MatchRequestBean;
 import social.bean.MatchesBean;
@@ -18,73 +18,75 @@ import social.bean.MatchingBean;
 
 public class MatchDAOImpl implements MatchDAO {
 
-	String jndiString = "java:comp/env/" + "jdbc/ProjectGreen";
+//	String jndiString = "java:comp/env/" + "jdbc/ProjectGreen";
 	// *****context的NAMEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-	DataSource ds;
+//	DataSource ds;
 
 	// *****預設建構連線參數
-	public MatchDAOImpl() {
-		try {
-			InitialContext ctx = new InitialContext();
-			ds = (DataSource) ctx.lookup(jndiString);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
+	private Session session;
+//	private SessionFactory factory;
+	
+//		public Session getSession() {
+//			return session = factory.getCurrentSession();
+//		}
 
+//	public MatchDAOImpl() {
+//
+//	}
+
+	public MatchDAOImpl(Session session) {
+		this.session = session;
+	}
+	
+//	public MatchDAOImpl(SessionFactory factory) {
+//		this.factory = factory;
+//	}
+
+//	public MatchDAOImpl() {
+//		try {
+//			InitialContext ctx = new InitialContext();
+//			ds = (DataSource) ctx.lookup(jndiString);
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
+//	}
+
+	
+	
 	@Override
 	public void insertMatchRequest(MatchRequestBean mrb) {
-		String sql = "Insert into MatchRequest(MemberID, AgeTopLike, AgeBottomLike,"
-				+ "HeightLike, WeightLike, GenderLike, InterestedRestaurantType, TourTypeLike, RequestDay) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		try (Connection con = ds.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql);) {
-			pstmt.setInt(1, mrb.getMemberID());
-			pstmt.setInt(2, mrb.getAgeTopLike());
-			pstmt.setInt(3, mrb.getAgeBottomLike());
-			pstmt.setInt(4, mrb.getHeightLike());
-			pstmt.setInt(5, mrb.getWeightLike());
-			pstmt.setInt(6, mrb.getGenderLike());
-			pstmt.setString(7, mrb.getInterestedRestaurantType());
-			pstmt.setString(8, mrb.getTourTypeLike());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String sdfst = sdf.format(mrb.getRequestDay());
-			java.sql.Date date = java.sql.Date.valueOf(sdfst);
-			pstmt.setDate(9, date);
-
-			try {
-				pstmt.executeUpdate();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		session.save(mrb);
 	}
 
-	public List<MatchingBean> todayRequest() {
-
+	public List<MatchingBean> todayRequest(int time) {
+		String hql;
+			hql = "SELECT new list(mr.matchID, mr.memberID, mr.ageTopLike, mr.ageBottomLike, "
+				+ "mr.heightLike, mr.weightLike, mr.genderLike, mr.interestedRestaurantType, "
+				+ "mr.tourTypeLike, mr.requestDay, mr.everyday, mr.getMatch, mb.memberName, "
+				+ "mf.memberBirthday, mf.profileHeight, mf.profileWeight, "
+				+ "mb.gender) FROM MemberBean2 mb, MemberProfileBean mf, MatchRequestBean as mr "
+				+ "where mb.memberID = mr.memberID and mr.memberID = mf.memberID "
+				+ "and DATEDIFF(day, mr.requestDay, :aaa) = :aaaa ";
+		// ****HQL 今天日期current_date()
+		List<List> list = new ArrayList<>();
 		List<MatchingBean> mbs = new ArrayList<>();
-		String sql = "select MatchID, MR.MemberID, AgeTopLike, AgeBottomLike, "
-				+ "HeightLike, WeightLike, GenderLike, InterestedRestaurantType, "
-				+ "TourTypeLike, RequestDay, Everyday, GetMatch, MemberName,  "
-				+ "MemberBirthday, ProfileHeight, ProfileWeight, Gender from MatchRequest as MR "
-				+ "inner join Member2 as M2 on MR.MemberID = M2.MemberID"
-				+ " inner join MemberProfile2 as MP on MR.MemberID = MP.ProfileID " + " where RequestDay = CONVERT (date, SYSDATETIME()) order by MatchID"; 
-		try (Connection con = ds.getConnection();
-				PreparedStatement ps = con.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery();) {
-			while (rs.next()) {
-				java.sql.Date date10 = rs.getDate(10);
-				java.util.Date jdate10 = new java.util.Date(date10.getTime()); // *****sql轉util
-				java.sql.Date date14 = rs.getDate(14);
-				java.util.Date jdate14 = new java.util.Date(date14.getTime());
-				MatchingBean mb = new MatchingBean(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5),
-						rs.getInt(6), rs.getInt(7), rs.getString(8), rs.getString(9), jdate10, rs.getInt(11),
-						rs.getInt(12), rs.getString(13), jdate14, rs.getInt(15), rs.getInt(16), rs.getInt(17));
-				mbs.add(mb);
-			}
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException("MemberDaoImpl_Jdbc類別發生SQL例外: " + ex.getMessage());
+		Query query = session.createQuery(hql);
+		query.setParameter("aaa",new Date());
+		query.setParameter("aaaa",time);
+		list = query.list();
+		for (List ll : list) {
+//			java.sql.Date date9 = (java.sql.Date) ll.get(9);
+////			java.util.Date jdate9 = new java.util.Date(date9.getTime()); // *****sql轉util
+//			java.sql.Date date13 = (java.sql.Date) ll.get(13);
+//			java.util.Date jdate13 = new java.util.Date(date13.getTime());
+			MatchingBean mb = new MatchingBean((Integer) ll.get(0), (Integer) ll.get(1), (Integer) ll.get(2),
+					(Integer) ll.get(3), (Integer) ll.get(4), (Integer) ll.get(5), (Integer) ll.get(6),
+					(String) ll.get(7), (String) ll.get(8), (java.sql.Date) ll.get(9), (Integer) ll.get(10),
+					(Integer) ll.get(11), (String) ll.get(12), (java.sql.Date) ll.get(13), (Integer) ll.get(14),
+					(Integer) ll.get(15), (Integer) ll.get(16));
+			mbs.add(mb);
+			mb = null;
+
 		}
 		return mbs;
 	}
@@ -94,151 +96,118 @@ public class MatchDAOImpl implements MatchDAO {
 			System.out.println("無人配對");
 			throw new IllegalArgumentException();
 		}
-		String sql = "Insert into Matches(MemberId1, MemberId2, PairDate) VALUES(?, ?, ?)";
-		try (Connection con = ds.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql);) {
-			System.out.println(matchResult.size());
-			for (int l = 0; l < matchResult.size(); l++) {
-				pstmt.setInt(1, (int) matchResult.get(l).get(0));
-				pstmt.setInt(2, (int) matchResult.get(l).get(1));
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				String sdfst = sdf.format(new java.util.Date());
-				java.sql.Date date = java.sql.Date.valueOf(sdfst);
-				pstmt.setDate(3, date);
-				pstmt.addBatch();
-				pstmt.clearParameters();
-			}
-			try {
-				pstmt.executeBatch();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		java.sql.Date pd = new java.sql.Date(new Date().getTime());
+		for (int l = 0; l < matchResult.size(); l++) {
+//				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//				java.sql.Date date = java.sql.Date.valueOf(sdfst);
+			MatchesBean mb = new MatchesBean(matchResult.get(l).get(0), 
+					matchResult.get(l).get(1), pd,-1,-1);
+			session.save(mb);
 		}
 	}
 
-	public void markMatch(Integer i) {
-		String sql = "update Matches set Friends1=1 where MemberId2=? and "
-				+ "MemberId1=1 and (Delete1!=1 and Delete2!=1) and PairDate= CONVERT(date, SYSDATETIME())";
-		try (Connection con = ds.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql);) {
-			pstmt.setInt(1, i);
-			try {
-				pstmt.executeUpdate();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+	public void markMatch(Integer i, Integer ii) {
+		String hql = "update MatchesBean m set friends1 = 1 where memberId2 = :oo and "
+				+ "memberId1 = :ooo and (delete1 != 1 and delete2 != 1) and " + "pairDate = CONVERT(date, SYSDATETIME())";
+		Query query = session.createQuery(hql);
+		query.setParameter("oo", i);
+		query.setParameter("ooo", ii);
+		query.executeUpdate();
 	}
 
-	public void markPairDate(Integer i) {
-		String sql = "update Matches set FriendDate=? where MemberId2=? and "
-				+ "MemberId1=1 and (Delete1!=1 and Delete2!=1) and PairDate= CONVERT(date, SYSDATETIME())"
-				+ " and Friends2=1";
-		try (Connection con = ds.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql);) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String sdfst = sdf.format(new java.util.Date());
-			java.sql.Date date = java.sql.Date.valueOf(sdfst);
-			pstmt.setDate(1, date);
-			pstmt.setInt(2, i);
-			try {
-				pstmt.executeUpdate();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+	public void markPairDate(Integer i,Integer ii) {
+		String hql = "update MatchesBean set friendDate = :oo where memberId2 = :oo1 and "
+				+ "memberId1 = :ooo and (delete1 != 1 and delete2 != 1) and "
+				+ "pairDate= CONVERT(date, SYSDATETIME()) and friends2 = 1";
+		java.sql.Date fd = new java.sql.Date(new Date().getTime());
+		Query query = session.createQuery(hql);
+		query.setParameter("oo", fd);
+		query.setParameter("oo1", i);
+		query.setParameter("ooo", ii);
+		query.executeUpdate();
 	}
-	
-	public List<MatchesBean> showMatch() {
+
+	public List<MatchesBean> showMatch(Integer i) {
 		List<MatchesBean> showMatch = new ArrayList<>();
-		String sql = "select PairId, MemberId1, MemberId2,\r\n"
-				+ " Friends1, Friends2, PairDate, FriendDate, Delete1, Delete2, ProfileHeight, ProfileWeight,\r\n"
-				+ " MemberName, Gender, MemberBirthday, MemberIntroduce \r\n" + " from Matches as M\r\n"
-				+ " inner join MemberProfile2 as MP \r\n" + " on M.MemberId2 =MP.ProfileID\r\n"
-				+ " inner join Member2 as M2 on MP.ProfileID = M2.MemberID\r\n"
-				+ "  where MemberId1  = 1 and delete1 != 1 ";
-		// *****沒撈到東西也不會回傳Null
-		try (Connection con = ds.getConnection();
-				PreparedStatement ps = con.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery();) {
-			while (rs.next()) {
-//				if (rs.wasNull()) {
-				java.sql.Date date6 = rs.getDate(6);
-				java.sql.Date date7 = rs.getDate(7);
-				java.sql.Date date14 = rs.getDate(14);
-				java.util.Date jdate6 = null;
-				java.util.Date jdate7 = null;
-				java.util.Date jdate14 = null;
-				if (date6 != null) {
-					jdate6 = new java.util.Date(date6.getTime()); // *****sql轉util
-				}
-				if (date7 != null) {
-					jdate7 = new java.util.Date(date7.getTime()); // *****sql轉util
-				}
-				if (date14 != null) {
-					jdate14 = new java.util.Date(date14.getTime()); // *****sql轉util
-				}
-				MatchesBean mb = new MatchesBean(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5),
-						jdate6, jdate7, rs.getInt(8), rs.getInt(9), rs.getInt(10), rs.getInt(11), rs.getString(12),
-						rs.getInt(13), jdate14, rs.getString(15));
-				showMatch.add(mb);
-
-			}
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException("MemberDaoImpl_Jdbc類別發生SQL例外: " + ex.getMessage());
+		String hql;
+		String hql2 = null;
+		List<List> list = new ArrayList<>();
+		List<List> list2 = new ArrayList<>();
+		if (i == 0) {
+			hql = "select new list(m.pairId, m.memberId1, m.memberId2, m.friends1, m.friends2, "
+					+ "m.pairDate, m.friendDate, m.delete1, m.delete2, mp.profileHeight, mp.profileWeight, "
+					+ "mb.memberName, mb.gender, mp.memberBirthday, mp.memberIntroduce) "
+					+ "from MatchesBean as m, MemberProfileBean as mp, MemberBean2 as mb "
+					+ "where m.memberId2 = mp.memberID and mp.memberID = mb.memberID "
+					+ "and m.friends1 = 1 and m.friends2 = 1 and m.delete1 != 1 and m.delete2 != 1";
+		} else {
+			hql = "select new list(m.pairId, m.memberId1, m.memberId2, m.friends1, m.friends2, "
+					+ "m.pairDate, m.friendDate, m.delete1, m.delete2, mp.profileHeight, mp.profileWeight, "
+					+ "mb.memberName, mb.gender, mp.memberBirthday, mp.memberIntroduce) "
+					+ "from MatchesBean as m, MemberProfileBean as mp, MemberBean2 as mb "
+					+ "where m.memberId2 = mp.memberID and mp.memberID = mb.memberID "
+					+ "and m.memberId1 = :aa and m.delete1 != 1 ";
+			
+			hql2 = "select new list(m.pairId, m.memberId1, m.memberId2, m.friends1, m.friends2, "
+					+ "m.pairDate, m.friendDate, m.delete1, m.delete2, mp.profileHeight, mp.profileWeight, "
+					+ "mb.memberName, mb.gender, mp.memberBirthday, mp.memberIntroduce) "
+					+ "from MatchesBean as m, MemberProfileBean as mp, MemberBean2 as mb "
+					+ "where m.memberId1 = mp.memberID and mp.memberID = mb.memberID "
+					+ "and m.memberId2 = :aaa and m.delete1 != 1 ";
+		}
+		Query query = session.createQuery(hql);
+		if (i != 0) {
+			Query query2 = session.createQuery(hql2);
+			query.setParameter("aa", i);
+			query2.setParameter("aaa", i);
+			list = query.list();
+			list2 = query2.list();
+		}
+//		System.out.println(list.size());
+		for (List ll : list) {
+			MatchesBean mb = new MatchesBean((Integer) ll.get(0), (Integer) ll.get(1), (Integer) ll.get(2),
+					(Integer) ll.get(3), (Integer) ll.get(4), (java.sql.Date) ll.get(5), (java.sql.Date) ll.get(6),
+					(Integer) ll.get(7), (Integer) ll.get(8), (Integer) ll.get(9), (Integer) ll.get(10),
+					(String) ll.get(11), (Integer) ll.get(12), (java.sql.Date) ll.get(13), (String) ll.get(14));
+			showMatch.add(mb);
+			mb = null;
+		}
+		for (List ll : list2) {
+			MatchesBean mb = new MatchesBean((Integer) ll.get(0), (Integer) ll.get(2), (Integer) ll.get(1),
+					(Integer) ll.get(3), (Integer) ll.get(4), (java.sql.Date) ll.get(5), (java.sql.Date) ll.get(6),
+					(Integer) ll.get(7), (Integer) ll.get(8), (Integer) ll.get(9), (Integer) ll.get(10),
+					(String) ll.get(11), (Integer) ll.get(12), (java.sql.Date) ll.get(13), (String) ll.get(14));
+			showMatch.add(mb);
+			mb = null;
 		}
 		return showMatch;
 	}
-	
-	//ajax找單筆朋友資訊
+
+	// ajax找單筆朋友資訊
 	public FriendInfoBean showFriendInfo(Integer i) {
 		FriendInfoBean fi = new FriendInfoBean();
-		String sql = "  select MemberID, MemberName, Gender, MemberBirthday, MemberIntroduce,\r\n"
-				+ "  ProfileHeight, ProfileWeight   from Member2 as M\r\n"
-				+ "  inner join MemberProfile2 as MP  on M.MemberID =MP.ProfileID\r\n" 
-				+ "  where MemberID  = ?";
-		// *****沒撈到東西也不會回傳Null
-		try (Connection con = ds.getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
-			ps.setInt(1, i);
-			try (ResultSet rs = ps.executeQuery();) {
-				while (rs.next()) {
-					java.sql.Date date4 = rs.getDate(4);
-					java.util.Date jdate4 = null;
-					if (date4 != null) {
-						jdate4 = new java.util.Date(date4.getTime()); // *****sql轉util
-					}
-					fi = new FriendInfoBean(rs.getInt(1), rs.getString(2), rs.getInt(3), jdate4, rs.getString(5),
-							rs.getInt(6), rs.getInt(7));
-				}
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-				throw new RuntimeException("MemberDaoImpl_Jdbc類別發生SQL例外0: " + ex.getMessage());
-			}
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException("MemberDaoImpl_Jdbc類別發生SQL例外1: " + ex.getMessage());
+		List<List> list = new ArrayList<>();
+		String hql = "select new list(mb.memberID, mb.memberName, mb.gender, mp.memberBirthday, "
+				+ "mp.memberIntroduce, mp.profileHeight, mp.profileWeight) "
+				+ "from MemberProfileBean as mp, MemberBean2 as mb "
+				+ "where mp.memberID = mb.memberID and mb.memberID= :aaa ";
+		Query query = session.createQuery(hql);
+		query.setParameter("aaa", i);
+		list = query.list();
+		System.out.println(list.size());
+		for (List ll : list) {
+			fi = new FriendInfoBean((Integer) ll.get(0), (String) ll.get(1), (Integer) ll.get(2),
+					(java.sql.Date) ll.get(3), (String) ll.get(4), (Integer) ll.get(5), (Integer) ll.get(6));
 		}
 		return fi;
 	}
 
-	public void deleteFriend(Integer i) {
-		String sql = "update Matches set Delete1=1 where MemberId2=? and "
-				+ "MemberId1=1 and (Delete1!=1)";
-		try (Connection con = ds.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql);) {
-			pstmt.setInt(1, i);
-			try {
-				pstmt.executeUpdate();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+	public void deleteFriend(Integer i, Integer ii) {
+		String hql = "update MatchesBean set delete1 = 1 where memberId2 = :oo and "
+				+ "memberId1 = :ooo and (delete1 != 1)";
+		Query query = session.createQuery(hql);
+		query.setParameter("oo", i);
+		query.setParameter("ooo", ii);
+		query.executeUpdate();
 	}
-
 }

@@ -1,18 +1,41 @@
 package social.bean;
 
 import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="MatchRequest")
 public class MatchRequestBean {
+	@Id @Column(name="MatchID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer matchID;
+	@Column(name="MemberID")
 	private Integer memberID;
+	@Column(name="AgeTopLike")
 	private Integer ageTopLike;
+	@Column(name="AgeBottomLike")
 	private Integer ageBottomLike;
+	@Column(name="HeightLike")
 	private Integer heightLike;
+	@Column(name="WeightLike")
 	private Integer weightLike;
+	@Column(name="GenderLike")
 	private Integer genderLike;
+	@Column(name="InterestedRestaurantType")
 	private String interestedRestaurantType;
+	@Column(name="TourTypeLike")
 	private String tourTypeLike;
-	private Date requestDay;
+	@Column(name="RequestDay")
+	private java.sql.Date requestDay;
+	@Column(name="GetMatch")
+	private Integer getMatch;
+	@Column(name="Everyday")
+	private Integer everyday;
 	
 	public MatchRequestBean() {
 		
@@ -20,8 +43,7 @@ public class MatchRequestBean {
 
 	public MatchRequestBean(int matchID, int memberID, int ageTopLike, int ageBottomLike, 
 			int heightLike, int weightLike, int genderLike, String interestedRestaurantType, String tourTypeLike,
-			Date requestDay) {
-		super();
+			java.sql.Date requestDay) {
 		this.matchID = matchID;
 		this.memberID = memberID;
 		this.ageTopLike = ageTopLike;
@@ -35,8 +57,7 @@ public class MatchRequestBean {
 	}
 
 	public MatchRequestBean(int memberID, int ageTopLike, int ageBottomLike,  int heightLike,
-			int weightLike, int genderLike, String interestedRestaurantType, String tourTypeLike, Date requestDay) {
-		super();
+			int weightLike, int genderLike, String interestedRestaurantType, String tourTypeLike, java.sql.Date requestDay) {
 		this.memberID = memberID;
 		this.ageTopLike = ageTopLike;
 		this.ageBottomLike = ageBottomLike;
@@ -125,7 +146,7 @@ public class MatchRequestBean {
 		return requestDay;
 	}
 
-	public void setRequestDay(Date requestDay) {
+	public void setRequestDay(java.sql.Date requestDay) {
 		this.requestDay = requestDay;
 	}
 

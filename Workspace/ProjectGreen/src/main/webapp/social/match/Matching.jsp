@@ -12,7 +12,7 @@
 today;'request
 ${FUCK}
 <table border="1">
-<c:forEach var='m' items='${Matching}' >
+<c:forEach var='m' items='${matching}' >
 	<tr>
 		<td>${m.matchID}</td>
 		<td>${m.memberID}</td>
@@ -21,7 +21,7 @@ ${FUCK}
 </table>
 MathingResult
 <table border="1">
-<c:forEach var='mL' items='${Matchlist}' >
+<c:forEach var='mL' items='${getMatch}' >
 	<tr>
 		<td>${mL[0]}</td>
 		<td>${mL[1]}</td>

@@ -7,7 +7,6 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -18,13 +17,16 @@ import javax.servlet.http.Part;
 import javax.xml.bind.DatatypeConverter;
 
 public class GlobalService {
-	// 這邊放的是整個應用程式都會用到的
+
+	public static final int RECORDS_PER_PAGE = 2;
+	public static final String SYSTEM_NAME = "";
+	public static final int IMAGE_FILENAME_LENGTH = 20;
 	public static final String JNDI_DB_NAME = "java:comp/env/jdbc/ProjectGreen";
-	
-	// 把GlobalService視為JavaBean，並把SystemName變成屬性物件
-//	public String getSystemName() { // systemName  ${SYSTEM.systemName}
-//		return SYSTEM_NAME;
-//	}
+	public static final String KEY = "KittySnoopyGarfieldMicky"; // 16, 24, 32
+	public static final int ORDER_AMOUNT_LIMIT = 10000;
+	public String getSystemName() { // systemName  ${SYSTEM.systemName}
+		return SYSTEM_NAME;
+	}
 
 	public static String getMD5Endocing(String message) {
 		final StringBuffer buffer = new StringBuffer();

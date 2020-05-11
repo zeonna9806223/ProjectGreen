@@ -1,9 +1,6 @@
 package social.bean;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 
 public class MatchingBean {
 	private Integer matchID;
@@ -15,11 +12,11 @@ public class MatchingBean {
 	private Integer genderLike;
 	private String interestedRestaurantType;
 	private String tourTypeLike;
-	private Date requestDay;
+	private java.sql.Date requestDay;
 	private Integer everyday;
 	private Integer getMatch;
 	private String memberName;
-	private Date memberBirthday;
+	private java.sql.Date memberBirthday;
 	private Integer profileHeight;
 	private Integer profileWeight;
 	private Integer gender;
@@ -30,9 +27,8 @@ public class MatchingBean {
 
 	public MatchingBean(Integer matchID, Integer memberID, Integer ageTopLike, Integer ageBottomLike,
 			Integer heightLike, Integer weightLike, Integer genderLike, String interestedRestaurantType,
-			String tourTypeLike, Date requestDay, Integer everyday, Integer getMatch, String memberName,
-			Date memberBirthday, Integer profileHeight, Integer profileWeight, Integer gender) {
-		super();
+			String tourTypeLike, java.sql.Date requestDay, Integer everyday, Integer getMatch, String memberName,
+			java.sql.Date memberBirthday, Integer profileHeight, Integer profileWeight, Integer gender) {
 		this.matchID = matchID;
 		this.memberID = memberID;
 		this.ageTopLike = ageTopLike;
@@ -128,7 +124,7 @@ public class MatchingBean {
 		return requestDay;
 	}
 
-	public void setRequestDay(Date requestDay) {
+	public void setRequestDay(java.sql.Date requestDay) {
 		this.requestDay = requestDay;
 	}
 
@@ -160,7 +156,7 @@ public class MatchingBean {
 		return memberBirthday;
 	}
 
-	public void setMemberBirthday(Date memberBirthday) {
+	public void setMemberBirthday(java.sql.Date memberBirthday) {
 		this.memberBirthday = memberBirthday;
 	}
 

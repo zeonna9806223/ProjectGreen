@@ -59,40 +59,81 @@
 <body>
 
 	<div class="wrap">
-		<header id="header">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<button id="primary-nav-button" type="button">Menu</button>
-						
-							<div class="logo">
-								<a href="index.jsp"><img src="img/logo.png" alt="Venue Logo" >
-							</div>
-						
-						<nav id="primary-nav" class="dropdown cf">
-							<ul class="dropdown menu">
-								<!-- changed -->
-								<li><a class="scrollTo"  href="index.jsp">探索更多</a></li>
-								<li><a>呼朋引伴</a>
+        <header id="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button id="primary-nav-button" type="button">Menu</button>
+                        <a href="${pageContext.request.contextPath}/social/Index.html">
+                            <div class="logo">
+                                <img src="${pageContext.request.contextPath}/social/img/logo.png" alt="Venue Logo">
+                            </div>
+                        </a>
+                        <nav id="primary-nav" class="dropdown cf">
+                            <ul class="dropdown menu">
+                                <!-- changed -->
+                                <li><a>呼朋引伴</a>
+                                    <ul class="sub-menu">
+                                        <li><a class="scrollTo" data-scrollTo="subtitle" href="Match.jsp">旅伴配對~</a></li>
+                                        <li><a class="scrollTo" data-scrollTo="subtitle" href="Event.html">我要揪團！</a></li>
+                                    </ul>
+                                </li>
+                                <!-- changed -->
+                              
+<!--                                 <li><a class="scrollTo" data-scrollTo="services" href="#">Our Services</a></li> -->
+<!--                                 <li><a class="scrollTo" data-scrollTo="transportation" href="#">交通方式</a></li> -->
+                                <li><a class="scrollTo" data-scrollTo="popular" href="#">找餐廳</a></li>
+<!--                                 <li><a class="scrollTo" data-scrollTo="Attractions" href="#">景點選擇</a></li> -->
+<!--                                 <li><a class="scrollTo" data-scrollTo="popular" href="#">找餐廳</a></li> -->
+                                   <li><a href="#">住宿選擇</a>
 									<ul class="sub-menu">
-										<li><a class="scrollTo" data-scrollTo="subtitle" href="#">伴遊配對~</a></li>
-										<li><a class="scrollTo" data-scrollTo="subtitle" href="#">我要揪團！</a></li>
+										<li><a class="scrollTo" data-scrollTo="accommodation"
+											href="#">住宿查詢</a></li>
+										<li><a class="scrollTo" data-scrollTo="accommodationEdit">住宿資料編輯</a></li>
 									</ul></li>
-								<!-- changed -->
-								<li><a class="scrollTo" data-scrollTo="blog" href="#">Blog
-										Entries</a></li>
-								<li><a class="scrollTo" data-scrollTo="services" href="#">Our
-										Services</a></li>
-								<li><a class="scrollTo" data-scrollTo="contact" href="#">Contact
-										Us</a></li>
-							</ul>
-						</nav>
-						<!-- / #primary-nav -->
-					</div>
-				</div>
-			</div>
-		</header>
-	</div>
+                                <li><a class="scrollTo" data-scrollTo="transportation" href="#">交通方式</a></li>
+                                <li><a class="scrollTo" data-scrollTo="Attractions" href="#">景點選擇</a></li>
+									
+<!--                                 <li><a class="scrollTo" data-scrollTo="comment" href="#">留言及評論</a></li> -->
+                                <li>
+                            		<c:if test="${empty LoginOK}">
+										<a href="<c:url value='/member/login.jsp' />">
+				     						登入 
+										</a>
+              						</c:if>
+                            	</li>
+                            	
+                            	<li>
+                            		<!-- 註冊 -->
+                            		<c:if test="${empty LoginOK}">
+			   							<a href="<c:url value='/member/register.jsp' />"> 註冊 </a>
+									</c:if> 
+									
+									<!-- 登入後 顯示基本資料 -->
+									<c:if test="${ ! empty LoginOK }">
+										<span id="account"></span>
+										<img style="padding-left:10px;" src='${pageContext.request.contextPath}/social/getImage?id=${LoginOK.memberAccount}&type=MEMBER' alt="" width="50px" height="50px" >
+									</c:if> 
+									
+            					</li>
+            					
+            					<li>
+            						<!-- 登入後  顯示登出 -->
+            						
+            						
+									<c:if test="${ ! empty LoginOK }">
+			  						<a href="<c:url value='/member/logout.jsp' />">登出 </a>
+									</c:if>
+            						
+            						
+            					</li>
+                            </ul>
+                        </nav><!-- / #primary-nav -->
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
 
 	<section class="banner" id="top">
 		<div class="container">
@@ -145,6 +186,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="section-heading">
+							<h2>Hi!${LoginOK.memberName}</h2>
 							<span>尋找一樣喜歡旅行的你</span>
 							<h2>旅伴配對</h2>
 						</div>
@@ -208,16 +250,16 @@
 											onchange='this.form()'>
 												<option value="" disabled selected hidden>請選擇</option>
 												<c:forEach var='tType' items='${tTypes}' varStatus="vs">
-													<option id="tType${vs.index}" value="${tType.travelType}">${tType.travelType}</option>
+													<option id="tType${vs.index}" value="${tType}">${tType}</option>
 												</c:forEach>
 												<option value="-1">沒關係，都可以</option>
 										</select></li>
 										<li><a>美食類型偏好</a>
 											<p>請選擇，您最喜歡的美食種類</p> <select style="width: 100%" 
-											name='fLike' id="tType" onchange='this.form()'>
+											name='fLike' id="rType" onchange='this.form()'>
 												<option value="" disabled selected hidden>請選擇</option>
 												<c:forEach var='resType' items='${resTypes}' varStatus="vs">
-													<option id="resType${vs.index}" value="${resType.restaurantType}">${resType.restaurantType}</option>
+													<option id="resType${vs.index}" value="${resType}">${resType}</option>
 												</c:forEach>
 												<option value="-1">沒關係，都可以</option>
 										</select></li>
@@ -233,16 +275,16 @@
 										<li><a>旅伴年齡偏好</a>
 											<p>請選擇，您希望的旅伴年紀(年齡下限為18歲，年齡上限為100歲)</p>
 <!-- 											<p style="width:50%;float:left;padding:0px">年齡下限</p><p style="width:50%;float:left;padding:0px">年齡上限</p> -->
-											<select
-											style="width: 50%;"  name='aBLike' id="aBType"
+											<select	style="width: 50%;"  name='aBLike' id="aBType"
 											onchange='this.form()'>
 												<option value="" disabled selected hidden>年齡下限</option>
 												<c:forEach var='b' begin="18" end="100">
 													<option id="b${b}" value="${b}">${b}</option>
 												</c:forEach>
 												<option value="-1">沒關係，都可以</option>
-										</select> <select style="width: 50%; float: right" 
-											name='aTLike' id="aTType" onchange='this.form()'>
+										</select> 
+										<select style="width: 50%; float: right" name='aTLike' id="aTType" 
+										onchange='this.form()'>
 												<option value="" disabled selected hidden>年齡上限</option>
 												<c:forEach var='t' begin="18" end="100">
 													<option id="t${t}" value="${t}">${t}</option>
@@ -299,10 +341,10 @@
 								<li style="margin:8px">
 <%-- 										<a href=""><p  style="width:50%;float:left;text-align:center;font-size:16px;font-weight: 500;'">夥伴：${c.memberName}</p></a> --%>
 										<p  class="ajax" id="match${c.memberId2}" data-id="${c.memberId2}" style="width:33%;float:left;text-align:center;font-size:10px;font-weight: 500;'">夥伴：${c.memberName}</p>
-										<p  style="width:53%;float:left;text-align:right;font-size:10px;font-weight: 500;"><fmt:formatDate value="${c.pairDate}" pattern="yyyy年MM月dd日"/></p>
+										<p  style="width:40%;float:left;text-align:right;font-size:10px;font-weight: 500;"><fmt:formatDate value="${c.pairDate}" pattern="yyyy年MM月dd日"/></p>
 										<form action="mr8.do" method="post" onsubmit="return reconfirm()">
 											<input class="tpdaypair" name="new" type='hidden' value="${c.memberId2}">
-											<p  style="width:13%;float:left;text-align:right;font-size:8px;font-weight: 100;"><input type="submit" style="width:45px;border:none;color:midnightblue" value="+好友"></p> 
+											<p  style="width:20%;float:left;text-align:right;font-size:8px;font-weight: 100;"><input type="submit" style="width:70px;border:none;color:midnightblue" value="+好友"></p> 
 										</form>
 								</li>													
 							</c:forEach>
@@ -314,11 +356,11 @@
 							<c:forEach var="b" items="${showFriends}">
 										<p  class="ajax" id="friend${b.memberId2}" data-id="${b.memberId2}" style="width:33%;float:left;text-align:center;font-size:12px;font-weight: 500;">夥伴：${b.memberName}</p>
 										
-										<p  style="width:53%;float:left;text-align:right;font-size:10px;font-weight: 500;"><fmt:formatDate value="${b.friendDate}" pattern="yyyy年MM月dd日"/></p>
+										<p  style="width:40%;float:left;text-align:right;font-size:10px;font-weight: 500;"><fmt:formatDate value="${b.friendDate}" pattern="yyyy年MM月dd日"/></p>
 										<form action="mr8.do" method="post" onsubmit="return reconfirm()">
 <%-- 										<p  class="ajax" data-id="d${b.memberId2}" style="width:33%;float:left;text-align:right;font-size:8px;font-weight: 100;">刪除好友</p> --%>
 											<input class="friend" name="delete" type='hidden' value="${b.memberId2}">
-											<p  style="width:13%;float:left;text-align:right;font-size:8px;font-weight: 100;"><input type="submit" style="width:45px;border:none;color:midnightblue" value="刪除好友"></p> 
+											<p  style="width:20%;float:left;text-align:right;font-size:8px;font-weight: 100;"><input type="submit" style="width:70px;border:none;color:midnightblue" value="刪除好友"></p> 
 										</form>
 								</li>
 							</c:forEach>
