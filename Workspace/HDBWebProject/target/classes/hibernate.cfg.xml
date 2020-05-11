@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+<!--         <property name="hibernate.connection.password">tiger</property> -->
+        <property name="hibernate.connection.url">jdbc:sqlserver://localhost:1433;databaseName=ProjectGreen</property>
+<!--         <property name="hibernate.connection.username">scott</property> -->
+        
+        <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+        <property name="hibernate.connection.datasource">java:comp/env/jndiJdbcConnSQLServer/OrderSystem</property>
+       
+        
+<!--         <property name="hibernate.show_sql">true</property> -->
+<!--         <property name="hibernate.format_sql">true</property>  -->
+        
+        <property name="hibernate.current_session_context_class">thread</property>       
+        
+        <mapping class="accommodation.search.model.bean.AccommodationTown"/>
+        <mapping class="accommodation.search.model.bean.AccommodationNum"/>
+        <mapping class="accommodation.search.model.bean.Accommodation"/>
+        <mapping class="accommodation.edit.model.bean.EditDetail"/>
+        <mapping resource="restaurant/resBean/RestaurantBean.hbm.xml"/>
+        <mapping class="social.bean.RestaurantTypeBean" />
+		<mapping class="social.bean.TravelTypeBean" />
+		<mapping class="social.bean.MemberBean2" />
+		<mapping class="social.bean.MemberProfileBean" />
+		<mapping class="social.bean.MatchRequestBean" />
+		<mapping class="social.bean.MatchesBean" />
+        
+        
+    </session-factory>
+</hibernate-configuration>
