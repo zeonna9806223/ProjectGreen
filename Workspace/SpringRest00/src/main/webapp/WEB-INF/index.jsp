@@ -623,20 +623,18 @@ function clearAllCookie() {
 // }
 
 function test(){
-	$.ajax({
+ $.ajax({
         url: "${pageContext.request.contextPath}/searchRegion", // It's  my servlet
         type : "GET",
         data : { 
-        	region : $("#rs").val(),
+         region : $("#rs").val(),
         },
         dataType: "json",
         success: function(data){
-            $("#ts").mousedown(function(){
-	        	$("#ts option").remove();
-	        	for(i=0;i<data.length;i++){
-	        		$('#ts').append($("<option></option>").attr("value", data[i].townId).text(data[i].town));
-	        	}
-            })
+          $("#ts option").remove();
+          for(i=0;i<data.length;i++){
+           $('#ts').append($("<option></option>").attr("value", data[i].townId).text(data[i].town));
+          }
         }
     });
 }
