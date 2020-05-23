@@ -1,18 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="width=device-width, initial-scale=1.0"><!-- changed -->
-    <title>鳩咪><</title><!-- changed -->
-
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 	<script src="//code.jquery.com/jquery-1.9.1.js"></script>
  	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -23,22 +13,17 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/social/css/owl-carousel.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/social/css/datepicker.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/social/css/templatemo-style.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <script src="${pageContext.request.contextPath}/social/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/social/css/body.css">
 
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900" rel="stylesheet">
-
-    <script src="${pageContext.request.contextPath}/social/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-</head>
-
-<body>
-
-    <div class="wrap">
+   <div class="wrap">
         <header id="header">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <button id="primary-nav-button" type="button">Menu</button>
-                        <a href="${pageContext.request.contextPath}/social/Index.html">
+                         <button id="primary-nav-button" type="button">Menu</button>
+                        <a href="${pageContext.request.contextPath}/social/Index.jsp">
                             <div class="logo">
                                 <img src="${pageContext.request.contextPath}/social/img/logo.png" alt="Venue Logo">
                             </div>
@@ -48,25 +33,36 @@
                                 <!-- changed -->
                                 <li><a>呼朋引伴</a>
                                     <ul class="sub-menu">
-                                        <li><a class="scrollTo" data-scrollTo="subtitle" href="<c:url value="/social/match"/>">旅伴配對~</a></li>
-                                        <li><a class="scrollTo" data-scrollTo="subtitle" href="Event.html">我要揪團！</a></li>
+                                        <li><a class="scrollTo" data-scrollTo="subtitle" href="${pageContext.request.contextPath}/social/match">旅伴配對~</a></li>
+                                        <li><a class="scrollTo" data-scrollTo="subtitle" href="${pageContext.request.contextPath}/social/Event.html">我要揪團！</a></li>
                                     </ul>
                                 </li>
                                 <!-- changed -->
                               
 <!--                                 <li><a class="scrollTo" data-scrollTo="services" href="#">Our Services</a></li> -->
 <!--                                 <li><a class="scrollTo" data-scrollTo="transportation" href="#">交通方式</a></li> -->
-                                <li><a class="scrollTo" data-scrollTo="popular" href="#">找餐廳</a></li>
+                                <li><a class="scrollTo" data-scrollTo="popular" href="${pageContext.request.contextPath}/restaurant/restaurantHome">找餐廳</a></li>
 <!--                                 <li><a class="scrollTo" data-scrollTo="Attractions" href="#">景點選擇</a></li> -->
 <!--                                 <li><a class="scrollTo" data-scrollTo="popular" href="#">找餐廳</a></li> -->
-                                   <li><a href="#">住宿選擇</a>
+                                 <li><a href="#">住宿選擇</a>
 									<ul class="sub-menu">
-										<li><a class="scrollTo" data-scrollTo="accommodation"
-											href="#">住宿查詢</a></li>
-										<li><a class="scrollTo" data-scrollTo="accommodationEdit">住宿資料編輯</a></li>
+										<li><a
+											href="${pageContext.request.contextPath}/index#accommodation">住宿查詢</a></li>
+										<li><a href="#">住宿資料編輯</a>
+											<ul class="sub-menu">
+												<li><a
+													href="${pageContext.request.contextPath}/edit/insert">新增</a></li>
+												<li><a
+													href="${pageContext.request.contextPath}/edit/update">修改</a></li>
+												<li><a
+													href="${pageContext.request.contextPath}/edit/delete">刪除</a></li>
+											</ul></li>
 									</ul></li>
-                                <li><a class="scrollTo" data-scrollTo="transportation" href="#">交通方式</a></li>
-                                <li><a class="scrollTo" data-scrollTo="Attractions" href="#">景點選擇</a></li>
+									<li><a
+											href="${pageContext.request.contextPath}/index#transportation">交通方式</a></li>
+<!--                                 <li><a class="scrollTo" data-scrollTo="transportation" href="#">交通方式</a></li> -->
+									<li><a href="${pageContext.request.contextPath}/index#Attractions">景點選擇</a></li>
+<!--                                 <li><a class="scrollTo" data-scrollTo="Attractions" href="#">景點選擇</a></li> -->
 									
 <!--                                 <li><a class="scrollTo" data-scrollTo="comment" href="#">留言及評論</a></li> -->
                                 <li>
@@ -191,6 +187,3 @@ function test(){
     <script src="${pageContext.request.contextPath}/social/js/datepicker.js"></script>
     <script src="${pageContext.request.contextPath}/social/js/plugins.js"></script>
     <script src="${pageContext.request.contextPath}/social/js/main.js"></script>
-</body>
-
-</html>
