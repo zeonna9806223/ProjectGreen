@@ -2,10 +2,13 @@ package social.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import social.model.bean.FriendInfoBean;
 import social.model.bean.MatchRequestBean;
 import social.model.bean.MatchesBean;
 import social.model.bean.MatchingBean;
+import social.model.bean.MessageBean;
 
 public interface Match {
 
@@ -19,7 +22,7 @@ public interface Match {
 	
 	void markMatch(Integer i, Integer ii);
 	
-	public void markPairDate(Integer i, Integer ii);
+	void markPairDate(Integer i, Integer ii);
 	
 	List<MatchesBean> showMatch(Integer ii);
 	
@@ -31,5 +34,9 @@ public interface Match {
 	
 	int getAge(Date birthday);
 	
-	public void deleteFriend(Integer i, Integer ii);	
+	void deleteFriend(Integer i, Integer ii);
+	
+	void saveMessage(Integer pairId, Integer id1, Integer id2, String text);
+	
+	List showMessage(Integer pair, Integer i);
 }

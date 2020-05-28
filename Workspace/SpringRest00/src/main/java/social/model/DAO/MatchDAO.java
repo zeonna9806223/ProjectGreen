@@ -1,10 +1,13 @@
 package social.model.DAO;
 
 import java.util.List;
+import java.util.Map;
+
 import social.model.bean.FriendInfoBean;
 import social.model.bean.MatchRequestBean;
 import social.model.bean.MatchesBean;
 import social.model.bean.MatchingBean;
+import social.model.bean.MessageBean;
 
 
 public interface MatchDAO {
@@ -26,5 +29,9 @@ public interface MatchDAO {
 	String friendProfileJson(java.sql.Blob image);
 	
 	void deleteFriend(Integer i, Integer ii);
+	
+	void saveMessage(Integer pairId, Integer id1, Integer id2, String text);
+	
+	List showMessage(Integer pair, Integer i);
 	
 }

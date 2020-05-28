@@ -1,4 +1,4 @@
- package social.controller;
+package social.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import social.model.bean.FriendInfoBean;
 import social.model.bean.MatchRequestBean;
 import social.model.bean.MatchesBean;
 import social.model.bean.MatchingBean;
+import social.model.bean.MessageBean;
 import social.service.Match;
 import social.service.RestaurantType;
 import social.service.TravelType;
@@ -42,28 +43,19 @@ public class MatchPageController {
 	Match match;
 	@Autowired
 	ServletContext ctx;
+
 	public MatchPageController() {
 	}
 
 	@RequestMapping("/")
 	public String showIndex() {
-//		String url= request.getRequestURI()+"Index.jsp";
 		return "redirect:index";
 	}
-	
-//	@RequestMapping("/top")
-//	public String showTop() {
-////		String url= request.getRequestURI()+"Index.jsp";
-//		return "top";
-//	}
-	
+
 	@RequestMapping(value = "/social/match")
 	public String showPage(Model model, HttpServletRequest request,
 			@SessionAttribute("LoginOK") MemberBean memberBean) {
-//		HttpSession session = ((HttpServletRequest) request).getSession();
-//		MemberBean memberBean = (MemberBean) session.getAttribute("LoginOK");
 		Integer pk = memberBean.getPKey();
-//		Integer pk = 1;
 		System.out.println(pk);
 		System.out.println("第二次交易要開始");
 		List<String> listt = rst.queryRestaurantTypes();
@@ -104,6 +96,7 @@ public class MatchPageController {
 			match.markPairDate(new2, pk);
 		}
 		return "redirect:" + "/social/match";
+//		return "/social/match";
 	}
 
 	@PostMapping(value = "/mr.do")
@@ -143,6 +136,7 @@ public class MatchPageController {
 					genderLike2, interestedRestaurantType2, tourTypeLike2, requestDay);
 			match.insertMatchRequest(mrb);
 			return "redirect:" + "/social/match";
+			
 		}
 	}
 
@@ -154,15 +148,14 @@ public class MatchPageController {
 		}
 	}
 
-
 //	public ResponseEntity<List<BookBeanWithImageData>>  allBooksWithImageData()  {
 //		List<BookBeanWithImageData> list = service.getAllBooksWithImageData();
 //		ResponseEntity<List<BookBeanWithImageData>> re = new ResponseEntity<>(list, HttpStatus.OK);
 //		return re;
 //	}
 	@RequestMapping(value = "/mr2.do")
-	public ResponseEntity<List<Map<String, String>>> friendInfo(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public ResponseEntity<List<Map<String, String>>> friendInfo(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 //		response.setContentType("application/Json; charset=UTF-8");
 		String H = request.getParameter("H");
@@ -207,6 +200,37 @@ public class MatchPageController {
 		jBraket.add(formatData);
 //		String ff = mapper.writeValueAsString(jBraket);
 		ResponseEntity<List<Map<String, String>>> re = new ResponseEntity<>(jBraket, HttpStatus.OK);
+		return re;
+	}
+
+	@RequestMapping(value = "/mr3.do")
+	public ResponseEntity<List<MessageBean>> showMessage(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		String H = request.getParameter("H");
+		String Z = request.getParameter("Z");
+		Integer HH = Integer.valueOf(H);
+		Integer ZZ = Integer.valueOf(Z);
+		List<MessageBean> showMessage = match.showMessage(ZZ, 0);
+		System.out.println("ssssize"+showMessage.size());
+		ResponseEntity<List<MessageBean>> re = new ResponseEntity<>(showMessage, HttpStatus.OK);
+		return re;
+	}
+	
+	@RequestMapping(value = "/mr4.do")
+	public ResponseEntity<List<MessageBean>> showMore(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		System.out.println("有近來");
+		String H = request.getParameter("H");
+		String Z = request.getParameter("Z");
+		String C = request.getParameter("C");
+		Integer HH = Integer.valueOf(H);
+		Integer ZZ = Integer.valueOf(Z);
+		Integer CC = Integer.valueOf(C);
+		List<MessageBean> showMessage = match.showMessage(ZZ, CC);
+		System.out.println("ssssize"+showMessage.size());
+		ResponseEntity<List<MessageBean>> re = new ResponseEntity<>(showMessage, HttpStatus.OK);
 		return re;
 	}
 }

@@ -4,19 +4,25 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import member.model.MemberBean;
 import social.model.bean.FriendInfoBean;
 import social.model.bean.MatchRequestBean;
 import social.model.bean.MatchesBean;
 import social.model.bean.MatchingBean;
+import social.model.bean.MessageBean;
 
 @Repository
 public class MatchDAOImpl implements MatchDAO {
@@ -32,7 +38,7 @@ public class MatchDAOImpl implements MatchDAO {
 	// *****預設建構連線參數
 //	private Session session;
 //	private SessionFactory factory;
-	
+
 //		public Session getSession() {
 //			return session = factory.getCurrentSession();
 //		}
@@ -43,7 +49,7 @@ public class MatchDAOImpl implements MatchDAO {
 //	public MatchDAOImpl(Session session) {
 //		this.session = session;
 //	}
-	
+
 //	public MatchDAOImpl(SessionFactory factory) {
 //		this.factory = factory;
 //	}
@@ -56,7 +62,7 @@ public class MatchDAOImpl implements MatchDAO {
 //			ex.printStackTrace();
 //		}
 //	}
-	
+
 	@Override
 	public void insertMatchRequest(MatchRequestBean mrb) {
 		Session session = factory.getCurrentSession();
@@ -65,7 +71,7 @@ public class MatchDAOImpl implements MatchDAO {
 
 	public List<MatchingBean> todayRequest(int time) {
 		String hql;
-			hql = "SELECT new list(mr.matchID, mr.memberID, mr.ageTopLike, mr.ageBottomLike, "
+		hql = "SELECT new list(mr.matchID, mr.memberID, mr.ageTopLike, mr.ageBottomLike, "
 				+ "mr.heightLike, mr.weightLike, mr.genderLike, mr.interestedRestaurantType, "
 				+ "mr.tourTypeLike, mr.requestDay, mr.everyday, mr.getMatch, mb.memberName, "
 				+ "mf.memberBirthday, mf.profileHeight, mf.profileWeight, "
@@ -77,8 +83,8 @@ public class MatchDAOImpl implements MatchDAO {
 		List<MatchingBean> mbs = new ArrayList<>();
 		Session session = factory.getCurrentSession();
 		Query query = session.createQuery(hql);
-		query.setParameter("aaa",new Date());
-		query.setParameter("aaaa",time);
+		query.setParameter("aaa", new Date());
+		query.setParameter("aaaa", time);
 		list = query.list();
 		for (List ll : list) {
 //			java.sql.Date date9 = (java.sql.Date) ll.get(9);
@@ -107,15 +113,15 @@ public class MatchDAOImpl implements MatchDAO {
 		for (int l = 0; l < matchResult.size(); l++) {
 //				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //				java.sql.Date date = java.sql.Date.valueOf(sdfst);
-			MatchesBean mb = new MatchesBean(matchResult.get(l).get(0), 
-					matchResult.get(l).get(1), pd,-1,-1);
+			MatchesBean mb = new MatchesBean(matchResult.get(l).get(0), matchResult.get(l).get(1), pd, -1, -1);
 			session.save(mb);
 		}
 	}
 
 	public void markMatch(Integer i, Integer ii) {
 		String hql = "update MatchesBean m set friends1 = 1 where memberId2 = :oo and "
-				+ "memberId1 = :ooo and (delete1 != 1 and delete2 != 1) and " + "pairDate = CONVERT(date, SYSDATETIME())";
+				+ "memberId1 = :ooo and (delete1 != 1 and delete2 != 1) and "
+				+ "pairDate = CONVERT(date, SYSDATETIME())";
 		Session session = factory.getCurrentSession();
 		Query query = session.createQuery(hql);
 		query.setParameter("oo", i);
@@ -123,7 +129,7 @@ public class MatchDAOImpl implements MatchDAO {
 		query.executeUpdate();
 	}
 
-	public void markPairDate(Integer i,Integer ii) {
+	public void markPairDate(Integer i, Integer ii) {
 		String hql = "update MatchesBean set friendDate = :oo where memberId2 = :oo1 and "
 				+ "memberId1 = :ooo and (delete1 != 1 and delete2 != 1) and "
 				+ "pairDate= CONVERT(date, SYSDATETIME()) and friends2 = 1";
@@ -156,7 +162,7 @@ public class MatchDAOImpl implements MatchDAO {
 					+ "from MatchesBean as m, MemberProfileBean as mp, MemberBean2 as mb "
 					+ "where m.memberId2 = mp.memberID and mp.memberID = mb.memberID "
 					+ "and m.memberId1 = :aa and m.delete1 != 1 ";
-			
+
 			hql2 = "select new list(m.pairId, m.memberId1, m.memberId2, m.friends1, m.friends2, "
 					+ "m.pairDate, m.friendDate, m.delete1, m.delete2, mp.profileHeight, mp.profileWeight, "
 					+ "mb.memberName, mb.gender, mp.memberBirthday, mp.memberIntroduce) "
@@ -231,10 +237,10 @@ public class MatchDAOImpl implements MatchDAO {
 //			fp = new FriendInfoBeanWithProfile(friendInfoBean, iamgeData);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}
 		return iamgeData;
 	}
-	
+
 	public void deleteFriend(Integer i, Integer ii) {
 		String hql = "update MatchesBean set delete1 = 1 where memberId2 = :oo and "
 				+ "memberId1 = :ooo and (delete1 != 1) and (delete1 != 1 and delete2 != 1)";
@@ -243,5 +249,48 @@ public class MatchDAOImpl implements MatchDAO {
 		query.setParameter("oo", i);
 		query.setParameter("ooo", ii);
 		query.executeUpdate();
+	}
+
+	public void saveMessage(Integer pairId, Integer id1, Integer id2, String text) {
+		Session session = factory.getCurrentSession();
+		Date date = new Date();
+		MessageBean messageBean = new MessageBean(pairId, id1, id2, id1, text, new java.sql.Timestamp(date.getTime()));
+		session.save(messageBean);
+	}
+
+	public List showMessage(Integer pair, Integer i) {
+		List rList = new ArrayList<>();
+		List<MessageBean> list = new ArrayList<>();
+		String hql;
+		Integer be = (1+i-1)*20+1;
+		Integer la = (1+i)*20;
+		Session session = factory.getCurrentSession();
+		Query query;
+		try {
+			if (i == 0) {
+				hql = "SELECT top 20 * FROM Friends a WHERE MatchId = :ww order by MessageId desc";
+//				hql = "FROM MessageBean m WHERE m.matchId = :pair order by m.messageId desc ";
+				query = session.createNativeQuery(hql,MessageBean.class);
+			} else {
+//				hql = "top 20 FROM MessageBean m WHERE m.matchId = :pair order by m.messageId desc ";
+				hql = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY MessageId DESC) as ROWNUM"
+						+ "  FROM Friends WHERE MatchId = :ww) as a WHERE ROWNUM >= :xx and ROWNUM <= :oo";
+				query = session.createNativeQuery(hql,MessageBean.class);
+				query.setParameter("xx", be);
+				query.setParameter("oo", la);
+			}
+			query.setParameter("ww", pair);
+			query.setFetchSize(20);
+			list =query.getResultList();
+//				System.out.println("哈哈"+list.get(list.size()-1).getText()); 
+//			list = query.getResultList();
+//			Iterator iii = list.iterator();
+//			for(int a=0; a<list.size();a++) {
+//				System.out.println("哈哈"+list.get(a).getRowNumber()); *****→沒映射的class property為null
+//			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

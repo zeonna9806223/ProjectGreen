@@ -36,7 +36,6 @@
 <body >
 
 <jsp:include page="../top.jsp"/>
-
 	<section class="banner" id="top">
 		<div class="container">
 			<div class="col-md-10 col-md-offset-1">
@@ -283,7 +282,7 @@
 							<li  id="friendInfo3">年齡</li>
 							<li  id="friendInfo4">自我介紹</li>
 							<li  id="friendInfo5">身高</li>
-							<li  id="friendInfo6">身高</li>
+							<li  id="friendInfo6">身材</li>
 						</ul>
 <!-- 						<div class="blue-button"> -->
 <!-- 							<a href="#">Buy It Now</a> -->
@@ -291,8 +290,8 @@
 					</div>
 				</div>
 				<div class="col-md-4">
-					<div class="table-item" >
-						<div class="top-content">
+					<div class="table-item" style="height:400px;width:290px;overflow:auto">
+						<div class="top-content" style="padding:20px">
 <!-- 							<h1>留言板</h1> -->
 							<h4>聊天室</h4>
 						</div>
@@ -300,50 +299,34 @@
 <!-- 							<li><a href="#">400 Suspendisse dapibus</a></li> -->
 <!-- 							<li><a href="#">40x Paleo celiac enamel</a></li> -->
 <!-- 							<li><a href="#">Williamsburg organic post ironic</a></li> -->
-							<li><a href="#">施工中</a></li>
+							<li id="showMore"><a >顯示更多</a></li>
 <!-- 							<li  style="margin:0px"><button  style="width:100%;text-align:center" class="blue-button3" onclick='connect();'>開聊</button></li> -->
+<!-- 							<li  style="margin:0px"><button  style="width:100%;text-align:center" class="blue-button3" onclick='disconnect();'>斷線</button></li> -->
 								
 				<div id="catalog">
-					<div class="card">
-						<div class="card-header msg_head">
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-								</div>
-								</div>
-							</div>
-						</div>
-						<div id="cardbody" class="">
+					<div id ="card">
+						<div id="cardbody" class="nextLine">
+<!-- 							<div id="blank" class='msg_cotainer_send'></div> -->
 						</div>
 						<div class="card-footer">
 							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text attach_btn"><i
-										class="fas fa-paperclip"></i></span>
-								</div>
-								<textarea name="msgInput" class="form-control type_msg" id="textmssg"
+								<textarea name="msgInput"  id="textmssg" style="width:80%;height:40px;resize:none;float:left"
 									placeholder="請輸入訊息..."></textarea>
-								<div class="input-group-append">
+									<div class="head-img" style="float:left">
+    								<img src="${pageContext.request.contextPath}/social/img/upload.png" id="my-img" style="width:40px;">          
+   									 <input type="file" id="img-upload"/>
+									</div>
+<!-- 								<input type="file" name="file" id="fileUpload" accept="image/*"> -->
+<!-- 								<div class="input-group-append"> -->
 									<!-- 							<input type="submit" value="Send" onclick='sendMessage();'/> -->
-									<span class="blue-button"
-										onclick='sendMessage();'>送出~</span>
-								</div>
+									<span class="blue-button" onclick='sendMessage();' style="width:30%">送出</span>
+<!-- 								</div> -->
+								
 							</div>
 						</div>
-
-						<!-- 				<div class="b"> -->
-						<!-- 					<p class="c">米津玄師</p> -->
-						<!-- 					<p class="d">這次學中文學得很愉快</p> -->
-						<!-- 					<p class="e">我也是，之後有機會再向你請教編曲</p> -->
-						<!-- 					<p> -->
-						<!-- 						請輸入想說的話<input type="button" class="btn btn-primary" value="結束交換"> -->
-						<!-- 					</p> -->
-						<!-- 				</div> -->
 					</div>
 				</div>
 						</ul>
-<!-- 						<div class="blue-button"> -->
-<!-- 							<a href="#">Buy It Now</a> -->
-<!-- 						</div> -->
 					</div>
 				</div>
 			</div>
@@ -366,160 +349,16 @@
 				width="100%" height="500px" frameborder="0" style="border: 0"
 				allowfullscreen></iframe>
 		</div>
-		<div class="container">
-			<div class="col-md-10 col-md-offset-1">
-				<div class="wrapper">
-					<div class="section-heading">
-						<span>Contact Us</span>
-						<h2>Vivamus nec vehicula felis</h2>
-					</div>
-					<!-- Modal button -->
-					<button id="modBtn" class="modal-btn">Talk to us</button>
-				</div>
-				<div id="modal" class="modal">
-					<!-- Modal Content -->
-					<div class="modal-content">
-						<div class="row">
-							<div class="col-md-8">
-								<div class="left-content">
-									<div class="row">
-										<div class="col-md-12">
-											<div class="section-heading">
-												<span>Talk To Us</span>
-												<h2>Let's have a discussion</h2>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<fieldset>
-												<input name="name" type="text" class="form-control"
-													id="name" placeholder="Your name..." >
-											</fieldset>
-										</div>
-										<div class="col-md-6">
-											<fieldset>
-												<input name="subject" type="text" class="form-control"
-													id="subject" placeholder="Subject..." >
-											</fieldset>
-										</div>
-										<div class="col-md-12">
-											<fieldset>
-												<textarea name="message" rows="6" class="form-control"
-													id="message" placeholder="Your message..." ></textarea>
-											</fieldset>
-										</div>
-										<div class="col-md-12">
-											<fieldset>
-												<button type="submit" id="form-submit" class="btn">Send
-													Message</button>
-											</fieldset>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="right-content">
-									<div class="row">
-										<div class="col-md-12">
-											<div class="content">
-												<div class="section-heading">
-													<span>More About Us</span>
-													<h2>Venue Company</h2>
-												</div>
-												<p>Etiam viverra nibh at lorem hendrerit porta non nec
-													ligula. Donec hendrerit porttitor pretium. Suspendisse
-													fermentum nec risus eu bibendum.</p>
-												<ul>
-													<li><span>Phone:</span><a href="#">010-050-0550</a></li>
-													<li><span>Email:</span><a href="#">hi@company.co</a></li>
-													<li><span>Address:</span><a href="#">company.co</a></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 	</section>
+<span id="kz">kkk</span>
+<span id="kz2">kkk2</span>
 
-
-
-	<footer>
-		<div class="container">
-			<div class="row">
-				<div class="col-md-5">
-					<div class="about-veno">
-						<div class="logo">
-							<img src="img/footer_logo.png" alt="Venue Logo">
-						</div>
-						<p>Mauris sit amet quam congue, pulvinar urna et, congue diam.
-							Suspendisse eu lorem massa. Integer sit amet posuere tellus, id
-							efficitur leo. In hac habitasse platea dictumst.</p>
-						<ul class="social-icons">
-							<li><a href="#"><i class="fa fa-facebook"></i></a> <a
-								href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i
-									class="fa fa-linkedin"></i></a> <a href="#"><i
-									class="fa fa-rss"></i></a> <a href="#"><i
-									class="fa fa-dribbble"></i></a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="useful-links">
-						<div class="footer-heading">
-							<h4>Useful Links</h4>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<ul>
-									<li><a href="#"><i class="fa fa-stop"></i>Help FAQs</a></li>
-									<li><a href="#"><i class="fa fa-stop"></i>Register</a></li>
-									<li><a href="#"><i class="fa fa-stop"></i>Login</a></li>
-									<li><a href="#"><i class="fa fa-stop"></i>My Profile</a></li>
-									<li><a href="#"><i class="fa fa-stop"></i>How It
-											Works?</a></li>
-									<li><a href="#"><i class="fa fa-stop"></i>More About
-											Us</a></li>
-								</ul>
-							</div>
-							<div class="col-md-6">
-								<ul>
-									<li><a href="#"><i class="fa fa-stop"></i>Our Clients</a></li>
-									<li><a href="#"><i class="fa fa-stop"></i>Partnerships</a></li>
-									<li><a href="#"><i class="fa fa-stop"></i>Blog Entries</a></li>
-									<li><a href="#"><i class="fa fa-stop"></i>Contact Us</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="contact-info">
-						<div class="footer-heading">
-							<h4>Contact Information</h4>
-						</div>
-						<p>Praesent iaculis gravida elementum. Proin fermentum neque
-							facilisis semper pharetra. Sed vestibulum vehicula tincidunt.</p>
-						<ul>
-							<li><span>Phone:</span><a href="#">010-050-0550</a></li>
-							<li><span>Email:</span><a href="#">hi@company.co</a></li>
-							<li><span>Address:</span><a href="#">company.co</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer>
-
-	<div class="sub-footer">
-		<p>
-			Copyright &copy; 2018 Company Name - Design: <a rel="nofollow"
-				href="http://www.templatemo.com">Template Mo</a>
-		</p>
-	</div>
+<!-- 	<div class="sub-footer"> -->
+<!-- 		<p> -->
+<!-- 			Copyright &copy; 2018 Company Name - Design: <a rel="nofollow" -->
+<!-- 				href="http://www.templatemo.com">Template Mo</a> -->
+<!-- 		</p> -->
+<!-- 	</div> -->
 
 	<script>
 		window.jQuery
@@ -528,7 +367,11 @@
 	</script>
 	<script>
 	var ajax00 = "<c:url value='/mr2.do'/>"
+	var ajax01 = "<c:url value='/mr3.do'/>"
+	var ajax02 = "<c:url value='/mr4.do'/>"
+	var memberID = ${LoginOK.PKey}
 	</script>
+<%-- 	<input id="abcd" type="hidden" data-ajax0="<c:url value='/mr2.do'/>" name="隱藏欄位名稱" value="<c:url value='/mr2.do'/>"> --%>
 <script src="js/websocketmulti.js"></script>
 </body>
 

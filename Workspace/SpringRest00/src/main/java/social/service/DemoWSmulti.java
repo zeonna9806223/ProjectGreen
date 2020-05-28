@@ -2,6 +2,7 @@ package social.service;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,42 +16,60 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import social.model.bean.ConnectBean;
+
 @Component
-@ServerEndpoint("/DemoWSmulti/{pair}")
+@ServerEndpoint("/DemoWSmulti/{pair}/{memberId}/{receiveBy}")
 public class DemoWSmulti {
 	private static final Set<Session> connectedSessions = Collections.synchronizedSet(new HashSet<>());
 	private static Set<ConnectBean> smallC = Collections.synchronizedSet(new HashSet<>());
 
+	private static Match match;
+
+	// 注入的时候，给 类的 service 注入
+	@Autowired
+	public void setChatService(Match match) {
+		this.match = match;
+	}
+
 //	private String pair;
 //	private static Map<String, Session> userMap = Collections.synchronizedMap(new HashedMap<>());
 	@OnOpen
-	public void onOpen(Session userSession, @PathParam("pair") String pair) throws IOException {
+	public void onOpen(Session userSession, @PathParam("pair") Integer pair, @PathParam("memberId") Integer memberId,
+			@PathParam("receiveBy") Integer receiveBy) throws IOException {
 		ConnectBean connectBean = new ConnectBean(pair, userSession);
 		connectedSessions.add(userSession); // client連線時將連線session放入set內儲存
 		smallC.add(connectBean);
 		String text = String.format("Session ID = %s, connected;", userSession.getId());
 //		userMap.put(pair, userSession);
-		System.out.println("pair: " + pair);
+		System.out.println("pair: " + pair + "memberId: " + memberId + "receiveBy: " + receiveBy);
 		System.out.println(text);
 		System.out.println("size:" + smallC.size());
 //		this.pair = pair;
 	}
 
-	@OnMessage
-	public void onMessage(Session userSession, String message, @PathParam("pair") String pair) {
+	@OnMessage(maxMessageSize = 524288000)
+	public void onMessage(Session userSession, String message, @PathParam("pair") Integer pair, @PathParam("memberId") Integer memberId,
+			@PathParam("receiveBy") Integer receiveBy) {
 		// 收到訊息時 message
 		// 在此可以做分流比如說room number
+		match.saveMessage(pair, memberId, receiveBy, message);
+		Date date = new Date();
 		String msg = null;
 		for (ConnectBean c : smallC) {
 			if (c.getSession().isOpen()) {
 				if (c.getPair().equals(pair)) {
 					if (c.getSession().equals(userSession)) {
-						msg = "<div>發信人" + message + "</div>";
+//						msg = "<div class='msg_cotainer_send'><span>您：</span>" + message + "<span class='msg_time_send'>" + date
+//								+ "</span></div>";
+						msg = "0"+message;
 					} else {
-						msg = "<div>收信人" + message + "</div>";
+//						msg = "<div class='msg_cotainer'><span>對方：</span>" + message + "<span class='msg_time_send'>" + date
+//								+ "</span></div>";
+						msg = "1"+message;
 					}
 					c.getSession().getAsyncRemote().sendText(msg); // 送訊息回client
 				}
@@ -86,7 +105,6 @@ public class DemoWSmulti {
 //			}
 //			session1.getAsyncRemote().sendText(msg); // 送訊息回client
 //		}
-
 		System.out.println("Session ID =" + userSession.getId() + " ,Message received:" + message);
 	}
 

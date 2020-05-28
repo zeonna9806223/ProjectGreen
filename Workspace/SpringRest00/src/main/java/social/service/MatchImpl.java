@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import social.model.bean.FriendInfoBean;
 import social.model.bean.MatchRequestBean;
 import social.model.bean.MatchesBean;
 import social.model.bean.MatchingBean;
+import social.model.bean.MessageBean;
 import social.model.DAO.MatchDAO;
 
 @Service
@@ -301,5 +303,13 @@ public class MatchImpl implements Match {
 
 	public void deleteFriend(Integer i, Integer ii) {
 		matchDAO.deleteFriend(i, ii);
+	}
+
+	public void saveMessage(Integer pairId, Integer id1, Integer id2, String text) {
+		matchDAO.saveMessage(pairId, id1, id2, text);
+	}
+
+	public List showMessage(Integer pair, Integer i){
+		return matchDAO.showMessage(pair,i);
 	}
 }

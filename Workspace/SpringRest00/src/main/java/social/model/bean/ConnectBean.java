@@ -3,18 +3,18 @@ package social.model.bean;
 import javax.websocket.Session;
 
 public class ConnectBean {
-	String pair;
+	Integer pair;
 	Session session;
 	public ConnectBean() {
 	}
-	public ConnectBean(String pair, Session session) {
+	public ConnectBean(Integer pair, Session session) {
 		this.pair = pair;
 		this.session = session;
 	}
-	public String getPair() {
+	public Integer getPair() {
 		return pair;
 	}
-	public void setPair(String pair) {
+	public void setPair(Integer pair) {
 		this.pair = pair;
 	}
 	public Session getSession() {
