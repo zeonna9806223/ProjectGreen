@@ -36,7 +36,7 @@ public class TransportationController {
 // （一）雙北YouBike
 	// 1. 間接導向頁面
 	// 網址：http://localhost:8080/ChuMeProject/transportation/YouBike/YouBike.do
-	@GetMapping("/YouBike/YouBike.do")
+	@GetMapping("/YouBike")
 	public String showYouBikePage(Model model) {
 		return "transportation/YouBike";
 	}
@@ -67,6 +67,7 @@ public class TransportationController {
 			model.addAttribute("stations", stations);
 			request.setAttribute("city", ybcity);
 			request.setAttribute("district", ybdist);
+			System.out.println("controller檢查點(台北市)：activity狀況："+stations.get(3).isActivity());
 //			System.out.println("準備返回jsp");
 			return "transportation/YouBike";
 		} else if(ybcity.equals("新北市")){
@@ -76,6 +77,7 @@ public class TransportationController {
 			request.setAttribute("city", ybcity);
 			request.setAttribute("district", ybdist);
 //			System.out.println("準備返回jsp");
+			System.out.println("controller檢查點(新北市)：activity狀況："+stations.get(3).isActivity());
 			return "transportation/YouBike";
 		}
 		else {
@@ -88,7 +90,7 @@ public class TransportationController {
 //	（二）台北捷運
 	// 1. 間接導向頁面
 	// 網址：http://localhost:8080/ChuMeProject/transportation/TaipeiMRT/TaipeiMRT.do
-	@GetMapping("/TaipeiMRT/TaipeiMRT.do")
+	@GetMapping("/TaipeiMRT")
 	public String showTaipeiMRTPages(Model model) {
 		return "transportation/TaipeiMRT";
 	}
