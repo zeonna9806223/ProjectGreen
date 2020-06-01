@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2020?~4??29?? ?U??11:06:28 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="restaurant.resBean.CountBean" table="RestaurantOverview">
+ 
+        
+        <id name="restaurantID" type="int">
+            <column name="RestaurantID" />
+            <generator class="assigned" />
+        </id>
+
+        <property name="restaurantName" type="java.lang.String">
+            <column name="RestaurantName" />
+        </property>
+        <property name="viewCount" type="java.lang.String">
+            <column name="ViewCount" />
+        </property>
+        <property name="bookingCount" type="java.lang.String">
+            <column name="BookingCount" />
+        </property>
+
+    </class>
+</hibernate-mapping>
