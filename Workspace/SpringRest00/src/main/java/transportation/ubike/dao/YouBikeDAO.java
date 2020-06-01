@@ -90,7 +90,6 @@ public class YouBikeDAO {
 		list = sessionFactory.getCurrentSession().createNativeQuery(sqlNTPC).addEntity(YouBikeNTPC.class).setParameter("district", district).getResultList();
 //		System.out.println("query.getResultList()成功，result長度："+list.size());
 //		System.out.println("準備出dao，回到service");
-		System.out.println("營運狀況"+list.get(1).isActivity());
 		return list;
 	}
 	
@@ -190,7 +189,7 @@ public class YouBikeDAO {
 	// 2. 更新：新北市YouBike資料
 	@SuppressWarnings("rawtypes")
 	private void updateYBNTPC() throws MalformedURLException {
-		URL url = new URL("https://data.ntpc.gov.tw/api/datasets/71CD1490-A2DF-4198-BEF1-318479775E8A/json?page=0&size=650");
+		URL url = new URL("https://data.ntpc.gov.tw/api/v1/rest/datastore/382000000A-000352-001");
 		try(
 				InputStream is = url.openStream();
 				InputStreamReader isr = new InputStreamReader(is);
@@ -202,9 +201,13 @@ public class YouBikeDAO {
 				sb.append(line);
 			}
 //			System.out.println(sb.toString());    // 確定趴進來的資料串沒錯
-			// 把sb轉成String，再轉成JSONArray
-			JSONArray jsonArray = new JSONArray(sb.toString());
-//			System.out.println(jsonArray.length());    // 確定資料筆數
+			// 把sb轉成String，再轉成JSONObject
+			JSONObject jo = new JSONObject(sb.toString());
+			// 從整包的集合中，把result這個JSONObject取出來
+			JSONObject resultobj = jo.getJSONObject("result");
+			// 從result物件中，把records這個JSONArray取出來
+			JSONArray array = resultobj.getJSONArray("records");
+//			System.out.println(array.length());    // 確定資料筆數
 			// 準備日期格式轉換
 			DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 			// 資料庫連線
@@ -218,10 +221,10 @@ public class YouBikeDAO {
 			// for迴圈取得JSONArray中的JSONObject，再用pstmt寫入資料庫
 			int counter=0;
 			int fail=0;
-			int dataSize = jsonArray.length();
+			int dataSize = array.length();
 			for (int i = 0; i < dataSize; i++) {
 				// 取得JSONArray中的JSONObject
-				JSONObject ob = jsonArray.getJSONObject(i);
+				JSONObject ob = array.getJSONObject(i);
 				String id = ob.getString("sno");
 				String name = ob.getString("sna");
 				String act = ob.getString("act");
@@ -272,93 +275,4 @@ public class YouBikeDAO {
 			System.out.println("（出錯）ParseException：YouBikeDAO_updateYBNTPC（新北市）");
 		}
 	}
-//	// 2. 更新：新北市YouBike資料（舊的url）
-//	@SuppressWarnings("rawtypes")
-//	private void updateYBNTPC() throws MalformedURLException {
-//		URL url = new URL("https://data.ntpc.gov.tw/api/v1/rest/datastore/382000000A-000352-001");
-//		try(
-//				InputStream is = url.openStream();
-//				InputStreamReader isr = new InputStreamReader(is);
-//				BufferedReader br = new BufferedReader(isr);
-//				) {
-//			StringBuilder sb = new StringBuilder();
-//			String line;
-//			while ( ( line = br.readLine() ) != null ) {
-//				sb.append(line);
-//			}
-////			System.out.println(sb.toString());    // 確定趴進來的資料串沒錯
-//			// 把sb轉成String，再轉成JSONObject
-//			JSONObject jo = new JSONObject(sb.toString());
-//			// 從整包的集合中，把result這個JSONObject取出來
-//			JSONObject resultobj = jo.getJSONObject("result");
-//			// 從result物件中，把records這個JSONArray取出來
-//			JSONArray array = resultobj.getJSONArray("records");
-////			System.out.println(array.length());    // 確定資料筆數
-//			// 準備日期格式轉換
-//			DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-//			// 資料庫連線
-//			Session session = sessionFactory.getCurrentSession();
-//			// 先把資料表清乾淨
-//			String sqlClean = "delete from YouBikeNTPC";
-//			session.createNativeQuery(sqlClean).executeUpdate();
-//			// 準備塞進資料表
-//			String sql = "insert into YouBikeNTPC ( StationID , StationName , Activity , Total , Available , Vacancy , City , District , Area , Latitude , Longitude  , UpdateTime ) values ( :id , :name , :act , :total , :ava , :vac , :city , :dis , :area , :lat , :lng , :upd)";
-//			Query queryUpdate = session.createNativeQuery(sql).addEntity(YouBikeNTPC.class);
-//			// for迴圈取得JSONArray中的JSONObject，再用pstmt寫入資料庫
-//			int counter=0;
-//			int fail=0;
-//			int dataSize = array.length();
-//			for (int i = 0; i < dataSize; i++) {
-//				// 取得JSONArray中的JSONObject
-//				JSONObject ob = array.getJSONObject(i);
-//				String id = ob.getString("sno");
-//				String name = ob.getString("sna");
-//				String act = ob.getString("act");
-//				int total = ob.getInt("tot");
-//				int ava = ob.getInt("sbi");
-//				int vac = ob.getInt("bemp");
-//				String dis = ob.getString("sarea");
-//				String area = ob.getString("ar");
-//				String lat = ob.getString("lat");
-//				String lng = ob.getString("lng");
-//				String upd = ob.getString("mday");
-//				System.out.println(id+"："+name+"："+upd);
-//				// 檢查：有站名才能新增
-//				if (name.length()==0) {
-//					fail++;
-//					continue;
-//				} else if(name !=null || name.length()!=0) {
-//					queryUpdate.setParameter("id", id);
-//					queryUpdate.setParameter("name", name);
-//					queryUpdate.setParameter("act", act);
-//					queryUpdate.setParameter("total", total);
-//					queryUpdate.setParameter("ava", ava);
-//					queryUpdate.setParameter("vac", vac);
-//					queryUpdate.setParameter("city", "新北市");
-//					queryUpdate.setParameter("dis", dis);
-//					queryUpdate.setParameter("area", area);
-//					queryUpdate.setParameter("lat", lat);
-//					queryUpdate.setParameter("lng", lng);
-//					// 時間處理
-//					Date date = format.parse(upd);
-//					Timestamp timestamp = new Timestamp(date.getTime());
-//					queryUpdate.setParameter("upd", timestamp);
-//					queryUpdate.executeUpdate();
-//					counter++;
-//					System.out.println("新增成功！");
-//				}
-//			}
-//			System.out.println("==== 新北市YouBike資料更新狀況 ====");
-//			System.out.println("1. 資料總筆數："+dataSize);
-//			System.out.println("2. 寫入筆數："+counter+"，寫入資料庫成功");
-//			System.out.println("3. 失敗筆數："+fail);
-//			System.out.println("-------------------------------------------");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			System.out.println("（出錯）IOException：YouBikeDAO_updateYBNTPC（新北市）");
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//			System.out.println("（出錯）ParseException：YouBikeDAO_updateYBNTPC（新北市）");
-//		}
-//	}
 }
