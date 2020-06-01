@@ -19,13 +19,13 @@ public class YouBikeTPC {
 	@Column(name = "STATIONNAME")
 	private String stationName;
 	@Column(name = "ACTIVITY")
-	private boolean activity;
+	private Boolean activity;
 	@Column(name = "TOTAL")
-	private int total;
+	private Integer total;
 	@Column(name = "AVAILABLE")
-	private int available;
+	private Integer available;
 	@Column(name = "VACANCY")
-	private int vacancy;
+	private Integer vacancy;
 	@Column(name = "CITY")
 	private String city;
 	@Column(name = "DISTRICT")
@@ -42,7 +42,7 @@ public class YouBikeTPC {
 	// 建構子們
 	public YouBikeTPC() {
 	}
-	public YouBikeTPC(String stationId, String stationName, boolean activity, int total, int available, int vacancy,
+	public YouBikeTPC(String stationId, String stationName, Boolean activity, Integer total, Integer available, Integer vacancy,
 			String city, String district, String area, Double latitude, Double longitude, Timestamp updateTime) {
 		this.stationId = stationId;
 		this.stationName = stationName;
@@ -71,28 +71,28 @@ public class YouBikeTPC {
 	public void setStationName(String stationName) {
 		this.stationName = stationName;
 	}
-	public boolean isActivity() {
+	public Boolean isActivity() {
 		return activity;
 	}
-	public void setActivity(boolean activity) {
+	public void setActivity(Boolean activity) {
 		this.activity = activity;
 	}
-	public int getTotal() {
+	public Integer getTotal() {
 		return total;
 	}
-	public void setTotal(int total) {
+	public void setTotal(Integer total) {
 		this.total = total;
 	}
-	public int getAvailable() {
+	public Integer getAvailable() {
 		return available;
 	}
-	public void setAvailable(int available) {
+	public void setAvailable(Integer available) {
 		this.available = available;
 	}
-	public int getVacancy() {
+	public Integer getVacancy() {
 		return vacancy;
 	}
-	public void setVacancy(int vacancy) {
+	public void setVacancy(Integer vacancy) {
 		this.vacancy = vacancy;
 	}
 	public String getCity() {
