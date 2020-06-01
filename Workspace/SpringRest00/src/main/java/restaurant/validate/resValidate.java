@@ -4,7 +4,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import restaurant.resBean.RestaurantBean;
+import restaurant.model.RestaurantBean;
 
 public class resValidate implements Validator{
 
@@ -22,7 +22,7 @@ public class resValidate implements Validator{
 		
 		RestaurantBean restaurant = (RestaurantBean) target;
 		
-		if(restaurant.getRestaurantName() != null && restaurant.getRestaurantName().length() < 2 || restaurant.getRestaurantName().length() > 15) {
+		if(restaurant.getRestaurantName() != null && restaurant.getRestaurantName().length() < 2 || restaurant.getRestaurantName().length() > 20) {
 			errors.rejectValue("restaurantName","","字的長度不符合規定");
 		}
 		if(restaurant.getRestaurantType() != null && restaurant.getRestaurantType().length() < 2 || restaurant.getRestaurantType().length() > 8) {
@@ -31,7 +31,7 @@ public class resValidate implements Validator{
 		if(restaurant.getRestaurantZone() != null && restaurant.getRestaurantZone().length() !=3) {
 			errors.rejectValue("restaurantZone","", "字的長度不符合規定");
 		}
-		if(restaurant.getRestaurantAddress() != null && restaurant.getRestaurantAddress().length() <2 || restaurant.getRestaurantAddress().length() >20) {
+		if(restaurant.getRestaurantAddress() != null && restaurant.getRestaurantAddress().length() <2 || restaurant.getRestaurantAddress().length() >25) {
 			errors.rejectValue("restaurantAddress","","字的長度不符合規定");
 		}
 		
